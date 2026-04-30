@@ -1,0 +1,244 @@
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f0f0f0, #dcdcdc);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* CONTAINER */
+.container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 420px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    position: relative;
+}
+
+/* DARK TOGGLE */
+.dark-toggle {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+/* HEADINGS */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-top: 20px;
+    margin-bottom: 10px;
+    border-left: 4px solid #1e90ff;
+    padding-left: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+
+}
+
+/* INPUTS */
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+/* INPUT FOCUS */
+input:focus, select:focus {
+    outline: none;
+    border: 1px solid #1e90ff;
+    box-shadow: 0 0 5px rgba(30,144,255,0.5);
+}
+
+/* ADD BUTTON */
+#addBtn {
+    width: 100%;
+    padding: 12px;
+    background: #1e90ff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(30,144,255,0.3);
+}
+
+#addBtn:hover {
+    background: #0d6efd;
+    transform: scale(1.03);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* FILTERS */
+.filters {
+    display: flex;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.filters button {
+    flex: 1;
+    padding: 8px;
+    background: #eee;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.filters button:hover {
+    background: #ddd;
+}
+
+.filters button.active {
+    background: #1e90ff;
+    color: white;
+}
+
+/* LIST */
+ul {
+    list-style: none;
+}
+
+li {
+    background: #f3f3f3;
+    padding: 14px;
+    margin-top: 10px;
+    border-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.2s;
+}
+
+li:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+/* ACTION BUTTONS */
+.actions {
+    display: flex;
+    gap: 8px;
+}
+
+.actions button {
+    border: none;
+    padding: 6px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* SOLVE BUTTON */
+.solve-btn {
+    background: #28a745;
+    color: white;
+}
+
+.solve-btn:hover {
+    background: #218838;
+}
+
+/* DELETE BUTTON */
+.delete-btn {
+    background: #dc3545;
+    color: white;
+}
+
+.delete-btn:hover {
+    background: #c82333;
+}
+
+/* SOLVED TEXT */
+.solved {
+    text-decoration: line-through;
+    opacity: 0.7;
+    color: #bbbbbb;
+}
+
+/* EMPTY STATE */
+#emptyMsg {
+    margin-top: 10px;
+    color: gray;
+}
+
+/* PROGRESS BAR */
+.progress-bar {
+    height: 10px;
+    background: #ddd;
+    border-radius: 5px;
+    margin-top: 10px;
+    overflow: hidden;
+}
+
+#progress {
+    background: linear-gradient(90deg, #28a745, #4caf50);
+    height: 100%;
+    border-radius: 5px;
+}
+
+/* DARK MODE */
+.dark {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+}
+
+/* DARK CONTAINER */
+.dark .container {
+    background: #1e1e1e;
+    color: white;
+}
+
+/* DARK INPUTS */
+.dark input,
+.dark select {
+    background: #2a2a2a;
+    color: white;
+    border: 1px solid #444;
+}
+
+/* DARK LIST */
+.dark li {
+    background: #2a2a2a;
+}
+
+/* DARK FILTER BUTTONS */
+.dark .filters button {
+    background: #333;
+    color: white;
+}
+
+.dark .filters button:hover {
+    background: #444;
+}
+
+/* DARK PROGRESS */
+.dark .progress-bar {
+    background: #444;
+}
+
+/* SMOOTH TRANSITION */
+body, .container, li, input, button {
+    transition: all 0.3s ease;
+}

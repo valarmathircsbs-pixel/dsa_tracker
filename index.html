@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSA Tracker</title>
+
+    <!-- Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+
+    <h1>DSA Practice Tracker</h1>
+
+    <input type="text" id="problemInput" placeholder="Enter problem name">
+
+    <select id="difficultySelect">
+        <option value="Easy">Easy</option>
+        <option value="Medium">Medium</option>
+        <option value="Hard">Hard</option>
+    </select>
+
+    <button id="addBtn">Add</button>
+
+    <!-- Filters -->
+    <div class="filters">
+        <button onclick="filterProblems(event,'All')">All</button>
+        <button onclick="filterProblems(event,'Easy')">Easy</button>
+        <button onclick="filterProblems(event,'Medium')">Medium</button>
+        <button onclick="filterProblems(event,'Hard')">Hard</button>
+    </div>
+
+    <h2>Problems</h2>
+
+    <p id="emptyMsg">No problems added yet 🚀</p>
+    <ul id="problemList"></ul>
+
+    <h2>Stats</h2>
+    <p>Total: <span id="totalCount">0</span></p>
+    <p>Easy: <span id="easyCount">0</span></p>
+    <p>Medium: <span id="mediumCount">0</span></p>
+    <p>Hard: <span id="hardCount">0</span></p>
+
+    <div class="progress-bar">
+        <div id="progress"></div>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
