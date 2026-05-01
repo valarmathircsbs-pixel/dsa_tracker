@@ -1,90 +1,111 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DSA Tracker</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DSA Tracker</title>
+<link rel="stylesheet" href="style.css">
+
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/2721/2721297.png">
 </head>
+
 <body>
 
 <div class="container">
 
-    <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+<button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
 
-    <h1>DSA Practice Tracker</h1>
+<h1>DSA Practice Tracker</h1>
 
-    <!-- INPUT -->
-    <input type="text" id="problemInput" placeholder="Enter problem name">
+<div class="input-group">
+<input type="text" id="problemInput" placeholder="Enter problem name">
 
-    <!-- DIFFICULTY -->
-    <select id="difficultySelect">
-        <option value="Easy">Easy</option>
-        <option value="Medium">Medium</option>
-        <option value="Hard">Hard</option>
-    </select>
+<select id="difficultySelect">
+<option>Easy</option>
+<option>Medium</option>
+<option>Hard</option>
+</select>
 
-    <!-- TOPIC -->
-    <select id="topicSelect">
-        <option value="Arrays">Arrays</option>
-        <option value="Strings">Strings</option>
-        <option value="Trees">Trees</option>
-        <option value="Graphs">Graphs</option>
-    </select>
+<select id="topicSelect">
+<option>Arrays</option>
+<option>Strings</option>
+<option>Trees</option>
+<option>Graphs</option>
+</select>
 
-    <!-- ADD BUTTON -->
-    <button id="addBtn">Add</button>
+<button id="addBtn">Add</button>
+</div>
 
-    <!-- SEARCH -->
-    <input type="text" id="searchInput" placeholder="Search problems...">
+<input type="text" id="searchInput" placeholder="Search problems...">
 
-    <!-- SORT -->
-    <select id="sortSelect">
-        <option value="default">Sort By</option>
-        <option value="name">Name</option>
-        <option value="difficulty">Difficulty</option>
-        <option value="solved">Solved</option>
-    </select>
+<select id="sortSelect">
+<option value="default">Sort By</option>
+<option value="name">Name</option>
+<option value="difficulty">Difficulty</option>
+<option value="solved">Solved</option>
+</select>
 
-    <!-- FILTERS -->
-    <div class="filters">
-        <button onclick="filterProblems(event,'All')">All</button>
-        <button onclick="filterProblems(event,'Easy')">Easy</button>
-        <button onclick="filterProblems(event,'Medium')">Medium</button>
-        <button onclick="filterProblems(event,'Hard')">Hard</button>
-    </div>
+<button onclick="clearAll()">Clear All</button>
 
-    <div class="filters">
-        <button onclick="filterStatus(event,'All')">All</button>
-        <button onclick="filterStatus(event,'Solved')">Solved</button>
-        <button onclick="filterStatus(event,'Unsolved')">Unsolved</button>
-    </div>
+<!-- FILTERS -->
+<div class="filters">
+<button onclick="filterProblems(event,'All')">All</button>
+<button onclick="filterProblems(event,'Easy')">Easy</button>
+<button onclick="filterProblems(event,'Medium')">Medium</button>
+<button onclick="filterProblems(event,'Hard')">Hard</button>
+</div>
 
-    <div class="filters">
-        <button onclick="filterTopic(event,'All')">All Topics</button>
-        <button onclick="filterTopic(event,'Arrays')">Arrays</button>
-        <button onclick="filterTopic(event,'Strings')">Strings</button>
-        <button onclick="filterTopic(event,'Trees')">Trees</button>
-        <button onclick="filterTopic(event,'Graphs')">Graphs</button>
-    </div>
+<div class="filters">
+<button onclick="filterStatus(event,'All')">All</button>
+<button onclick="filterStatus(event,'Solved')">Solved</button>
+<button onclick="filterStatus(event,'Unsolved')">Unsolved</button>
+</div>
 
-    <!-- LIST -->
-    <h2>Problems</h2>
-    <p id="emptyMsg">No problems added yet</p>
-    <ul id="problemList"></ul>
+<div class="filters">
+<button onclick="filterTopic(event,'All')">All Topics</button>
+<button onclick="filterTopic(event,'Arrays')">Arrays</button>
+<button onclick="filterTopic(event,'Strings')">Strings</button>
+<button onclick="filterTopic(event,'Trees')">Trees</button>
+<button onclick="filterTopic(event,'Graphs')">Graphs</button>
+</div>
 
-    <!-- STATS -->
-    <h2>Stats</h2>
-    <p>Total: <span id="totalCount">0</span></p>
-    <p>Easy: <span id="easyCount">0</span></p>
-    <p>Medium: <span id="mediumCount">0</span></p>
-    <p>Hard: <span id="hardCount">0</span></p>
+<h2>Problems</h2>
+<p id="emptyMsg">No problems added</p>
+<ul id="problemList"></ul>
 
-    <!-- PROGRESS -->
-    <div class="progress-bar">
-        <div id="progress"></div>
-    </div>
+<h2>Stats</h2>
+<p>Total: <span id="totalCount">0</span></p>
+<p>Easy: <span id="easyCount">0</span></p>
+<p>Medium: <span id="mediumCount">0</span></p>
+<p>Hard: <span id="hardCount">0</span></p>
 
+<p id="percentText">Solved: 0%</p>
+
+<div class="progress-bar">
+<div id="progress"></div>
+</div>
+
+</div>
+
+<!-- MODAL -->
+<div id="editModal" class="modal">
+<div class="modal-content">
+<h3>Edit Problem</h3>
+<input id="editName">
+<select id="editDifficulty">
+<option>Easy</option>
+<option>Medium</option>
+<option>Hard</option>
+</select>
+<select id="editTopic">
+<option>Arrays</option>
+<option>Strings</option>
+<option>Trees</option>
+<option>Graphs</option>
+</select>
+<button onclick="saveEdit()">Save</button>
+<button onclick="closeModal()">Cancel</button>
+</div>
 </div>
 
 <script src="script.js"></script>

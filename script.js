@@ -1,4 +1,3 @@
-// ELEMENTS
 const input = document.getElementById("problemInput");
 const select = document.getElementById("difficultySelect");
 const topicSelect = document.getElementById("topicSelect");
@@ -13,225 +12,182 @@ const hardCount = document.getElementById("hardCount");
 const searchInput = document.getElementById("searchInput");
 const sortSelect = document.getElementById("sortSelect");
 
-// DATA
-let total = 0, easy = 0, medium = 0, hard = 0;
 let problems = [];
+let editIndex = null;
 
 // SAVE
 function saveData() {
     localStorage.setItem("problems", JSON.stringify(problems));
 }
 
-// EMPTY STATE
-function updateEmptyState() {
-    document.getElementById("emptyMsg").style.display =
-        problems.length === 0 ? "block" : "none";
+// LOAD
+function loadData() {
+    const data = localStorage.getItem("problems");
+    if (data) problems = JSON.parse(data);
+    render();
 }
 
-// PROGRESS
-function updateProgress() {
-    const solved = problems.filter(p => p.solved).length;
-    const percent = total === 0 ? 0 : (solved / total) * 100;
-    document.getElementById("progress").style.width = percent + "%";
-}
+// RENDER
+function render(data = problems) {
+    list.innerHTML = "";
 
-// ADD UI
-function addToUI(problem) {
+    let total = 0, easy = 0, medium = 0, hard = 0;
 
-    if (!problem.topic) problem.topic = "General";
+    data.forEach((p, index) => {
 
-    const li = document.createElement("li");
+        const li = document.createElement("li");
 
-    const name = document.createElement("span");
-    name.textContent = `${problem.name} (${problem.difficulty} • ${problem.topic})`;
+        const name = document.createElement("span");
+        name.textContent = `${p.name} (${p.difficulty} • ${p.topic})`;
 
-    if (problem.solved) name.classList.add("solved");
+        if (p.solved) name.classList.add("solved");
 
-    const actions = document.createElement("div");
-    actions.classList.add("actions");
+        const actions = document.createElement("div");
 
-    const solveBtn = document.createElement("button");
-    solveBtn.textContent = "✔️";
+        const solveBtn = document.createElement("button");
+        solveBtn.textContent = "✔️";
 
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "❌";
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "❌";
 
-    const editBtn = document.createElement("button");
-    editBtn.textContent = "✏️";
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "✏️";
 
-    actions.appendChild(solveBtn);
-    actions.appendChild(deleteBtn);
-    actions.appendChild(editBtn);
+        actions.append(solveBtn, deleteBtn, editBtn);
+        li.append(name, actions);
+        list.appendChild(li);
 
-    li.appendChild(name);
-    li.appendChild(actions);
-    list.appendChild(li);
+        total++;
+        if (p.difficulty === "Easy") easy++;
+        else if (p.difficulty === "Medium") medium++;
+        else hard++;
 
-    total++;
+        solveBtn.onclick = () => {
+            p.solved = !p.solved;
+            saveData();
+            render();
+        };
+
+        deleteBtn.onclick = () => {
+            if (confirm("Delete this problem?")) {
+                problems.splice(index, 1);
+                saveData();
+                render();
+            }
+        };
+
+        editBtn.onclick = () => openModal(index);
+    });
+
     totalCount.textContent = total;
+    easyCount.textContent = easy;
+    mediumCount.textContent = medium;
+    hardCount.textContent = hard;
 
-    if (problem.difficulty === "Easy") easy++, easyCount.textContent = easy;
-    else if (problem.difficulty === "Medium") medium++, mediumCount.textContent = medium;
-    else hard++, hardCount.textContent = hard;
-
-    updateProgress();
-    updateEmptyState();
-
-    solveBtn.onclick = () => {
-        problem.solved = !problem.solved;
-        name.classList.toggle("solved");
-        saveData();
-        updateProgress();
-    };
-
-    deleteBtn.onclick = () => {
-        list.removeChild(li);
-        problems = problems.filter(p => p !== problem);
-        saveData();
-
-        total--;
-        totalCount.textContent = total;
-
-        if (problem.difficulty === "Easy") easy--, easyCount.textContent = easy;
-        else if (problem.difficulty === "Medium") medium--, mediumCount.textContent = medium;
-        else hard--, hardCount.textContent = hard;
-
-        updateProgress();
-        updateEmptyState();
-    };
-
-    editBtn.onclick = () => {
-        const newName = prompt("Edit problem name:", problem.name);
-        const newDifficulty = prompt("Edit difficulty:", problem.difficulty);
-        const newTopic = prompt("Edit topic:", problem.topic);
-
-        if (newName) problem.name = newName;
-        if (newDifficulty) problem.difficulty = newDifficulty;
-        if (newTopic) problem.topic = newTopic;
-
-        saveData();
-
-        list.innerHTML = "";
-        total = easy = medium = hard = 0;
-        problems.forEach(addToUI);
-    };
+    updateProgress(total);
+    document.getElementById("emptyMsg").style.display = problems.length ? "none" : "block";
 }
 
 // ADD
 button.onclick = () => {
     const name = input.value.trim();
-
     if (!name) return;
 
-    const exists = problems.some(p => p.name.toLowerCase() === name.toLowerCase());
-    if (exists) {
-        alert("Problem already exists!");
-        return;
-    }
-
-    const p = {
-        name: name,
+    problems.push({
+        name,
         difficulty: select.value,
         topic: topicSelect.value,
         solved: false
-    };
-
-    problems.push(p);
-    saveData();
-    addToUI(p);
+    });
 
     input.value = "";
     input.focus();
     searchInput.value = "";
+
+    saveData();
+    render();
 };
 
 // SEARCH
-searchInput.addEventListener("input", function () {
-    searchProblems(this.value);
+searchInput.addEventListener("input", () => {
+    const q = searchInput.value.toLowerCase();
+    render(problems.filter(p => p.name.toLowerCase().includes(q)));
 });
-
-function searchProblems(query) {
-    list.innerHTML = "";
-    total = easy = medium = hard = 0;
-
-    problems.forEach(p => {
-        if (p.name.toLowerCase().includes(query.toLowerCase())) {
-            addToUI(p);
-        }
-    });
-}
 
 // SORT
-sortSelect.addEventListener("change", function () {
-    sortProblems(this.value);
+sortSelect.addEventListener("change", () => {
+    const type = sortSelect.value;
+
+    if (type === "name") problems.sort((a,b)=>a.name.localeCompare(b.name));
+    else if (type === "difficulty") {
+        const order = {Easy:1,Medium:2,Hard:3};
+        problems.sort((a,b)=>order[a.difficulty]-order[b.difficulty]);
+    }
+    else if (type === "solved") problems.sort((a,b)=>b.solved-a.solved);
+
+    render();
 });
 
-function sortProblems(type) {
-    if (type === "name") {
-        problems.sort((a, b) => a.name.localeCompare(b.name));
-    } else if (type === "difficulty") {
-        const order = { Easy: 1, Medium: 2, Hard: 3 };
-        problems.sort((a, b) => order[a.difficulty] - order[b.difficulty]);
-    } else if (type === "solved") {
-        problems.sort((a, b) => b.solved - a.solved);
-    }
-
-    list.innerHTML = "";
-    total = easy = medium = hard = 0;
-    problems.forEach(addToUI);
-}
-
 // FILTERS
-function filterProblems(event, type) {
-    list.innerHTML = "";
-    total = easy = medium = hard = 0;
-
-    problems.forEach(p => {
-        if (type === "All" || p.difficulty === type) {
-            addToUI(p);
-        }
-    });
+function filterProblems(e,type){
+    render(type==="All"?problems:problems.filter(p=>p.difficulty===type));
+}
+function filterStatus(e,type){
+    render(type==="All"?problems:
+        problems.filter(p=>type==="Solved"?p.solved:!p.solved));
+}
+function filterTopic(e,type){
+    render(type==="All"?problems:problems.filter(p=>p.topic===type));
 }
 
-function filterStatus(event, type) {
-    list.innerHTML = "";
-    total = easy = medium = hard = 0;
-
-    problems.forEach(p => {
-        if (
-            type === "All" ||
-            (type === "Solved" && p.solved) ||
-            (type === "Unsolved" && !p.solved)
-        ) {
-            addToUI(p);
-        }
-    });
+// CLEAR
+function clearAll(){
+    if(confirm("Clear all data?")){
+        problems=[];
+        localStorage.clear();
+        render();
+    }
 }
 
-function filterTopic(event, type) {
-    list.innerHTML = "";
-    total = easy = medium = hard = 0;
+// MODAL
+function openModal(i){
+    editIndex=i;
+    const p=problems[i];
 
-    problems.forEach(p => {
-        if (type === "All" || p.topic === type) {
-            addToUI(p);
-        }
-    });
+    editName.value=p.name;
+    editDifficulty.value=p.difficulty;
+    editTopic.value=p.topic;
+
+    editModal.style.display="flex";
+}
+function closeModal(){
+    editModal.style.display="none";
+}
+function saveEdit(){
+    const p=problems[editIndex];
+
+    p.name=editName.value;
+    p.difficulty=editDifficulty.value;
+    p.topic=editTopic.value;
+
+    saveData();
+    closeModal();
+    render();
+}
+
+// PROGRESS
+function updateProgress(total){
+    const solved=problems.filter(p=>p.solved).length;
+    const percent=total?Math.round((solved/total)*100):0;
+
+    document.getElementById("progress").style.width=percent+"%";
+    document.getElementById("percentText").textContent="Solved: "+percent+"%";
 }
 
 // DARK MODE
-function toggleDarkMode() {
+function toggleDarkMode(){
     document.body.classList.toggle("dark");
 }
 
-// LOAD
-function loadData() {
-    const data = localStorage.getItem("problems");
-    if (data) {
-        problems = JSON.parse(data);
-        problems.forEach(addToUI);
-    }
-    updateEmptyState();
-}
-
+// START
 loadData();

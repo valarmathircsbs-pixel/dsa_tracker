@@ -254,3 +254,57 @@ body, .container, li, input, button {
 button:active {
     transform: scale(0.97);
 }
+/* MODAL BACKGROUND */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background: rgba(0, 0, 0, 0.5);
+
+    justify-content: center;
+    align-items: center;
+}
+
+/* CENTER CONTENT */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* DARK MODE FIX */
+body.dark .modal-content {
+    background: #222;
+    color: white;
+}
+.modal-content button {
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.modal-content button:first-of-type {
+    background: #2ecc71;
+    color: white;
+}
+
+.modal-content button:last-of-type {
+    background: #e74c3c;
+    color: white;
+}
+.modal-content button:hover {
+    opacity: 0.9;
+}
