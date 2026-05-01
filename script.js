@@ -11,6 +11,7 @@ const mediumCount = document.getElementById("mediumCount");
 const hardCount = document.getElementById("hardCount");
 
 const searchInput = document.getElementById("searchInput");
+const sortSelect = document.getElementById("sortSelect");
 
 // DATA
 let total = 0, easy = 0, medium = 0, hard = 0;
@@ -34,10 +35,9 @@ function updateProgress() {
     document.getElementById("progress").style.width = percent + "%";
 }
 
-// ADD TO UI
+// ADD UI
 function addToUI(problem) {
 
-    // Fix old data
     if (!problem.topic) problem.topic = "General";
 
     const li = document.createElement("li");
@@ -50,20 +50,15 @@ function addToUI(problem) {
     const actions = document.createElement("div");
     actions.classList.add("actions");
 
-    // BUTTONS
     const solveBtn = document.createElement("button");
     solveBtn.textContent = "✔️";
-    solveBtn.classList.add("solve-btn");
 
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "❌";
-    deleteBtn.classList.add("delete-btn");
 
     const editBtn = document.createElement("button");
     editBtn.textContent = "✏️";
-    editBtn.classList.add("edit-btn");
 
-    // APPEND
     actions.appendChild(solveBtn);
     actions.appendChild(deleteBtn);
     actions.appendChild(editBtn);
@@ -72,7 +67,6 @@ function addToUI(problem) {
     li.appendChild(actions);
     list.appendChild(li);
 
-    // COUNTS
     total++;
     totalCount.textContent = total;
 
@@ -83,7 +77,6 @@ function addToUI(problem) {
     updateProgress();
     updateEmptyState();
 
-    // SOLVE
     solveBtn.onclick = () => {
         problem.solved = !problem.solved;
         name.classList.toggle("solved");
@@ -91,7 +84,6 @@ function addToUI(problem) {
         updateProgress();
     };
 
-    // DELETE
     deleteBtn.onclick = () => {
         list.removeChild(li);
         problems = problems.filter(p => p !== problem);
@@ -108,11 +100,10 @@ function addToUI(problem) {
         updateEmptyState();
     };
 
-    // EDIT (FIXED)
     editBtn.onclick = () => {
         const newName = prompt("Edit problem name:", problem.name);
-        const newDifficulty = prompt("Edit difficulty (Easy/Medium/Hard):", problem.difficulty);
-        const newTopic = prompt("Edit topic (Arrays/Strings/Trees/Graphs):", problem.topic);
+        const newDifficulty = prompt("Edit difficulty:", problem.difficulty);
+        const newTopic = prompt("Edit topic:", problem.topic);
 
         if (newName) problem.name = newName;
         if (newDifficulty) problem.difficulty = newDifficulty;
@@ -120,7 +111,6 @@ function addToUI(problem) {
 
         saveData();
 
-        // refresh UI
         list.innerHTML = "";
         total = easy = medium = hard = 0;
         problems.forEach(addToUI);
@@ -131,10 +121,7 @@ function addToUI(problem) {
 button.onclick = () => {
     const name = input.value.trim();
 
-    if (!name) {
-        alert("Enter problem name");
-        return;
-    }
+    if (!name) return;
 
     const exists = problems.some(p => p.name.toLowerCase() === name.toLowerCase());
     if (exists) {
@@ -145,7 +132,7 @@ button.onclick = () => {
     const p = {
         name: name,
         difficulty: select.value,
-        topic: topicSelect ? topicSelect.value : "General",
+        topic: topicSelect.value,
         solved: false
     };
 
@@ -154,12 +141,9 @@ button.onclick = () => {
     addToUI(p);
 
     input.value = "";
+    input.focus();
+    searchInput.value = "";
 };
-
-// ENTER KEY
-input.addEventListener("keypress", e => {
-    if (e.key === "Enter") button.click();
-});
 
 // SEARCH
 searchInput.addEventListener("input", function () {
@@ -177,16 +161,29 @@ function searchProblems(query) {
     });
 }
 
-// FILTER DIFFICULTY
+// SORT
+sortSelect.addEventListener("change", function () {
+    sortProblems(this.value);
+});
+
+function sortProblems(type) {
+    if (type === "name") {
+        problems.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (type === "difficulty") {
+        const order = { Easy: 1, Medium: 2, Hard: 3 };
+        problems.sort((a, b) => order[a.difficulty] - order[b.difficulty]);
+    } else if (type === "solved") {
+        problems.sort((a, b) => b.solved - a.solved);
+    }
+
+    list.innerHTML = "";
+    total = easy = medium = hard = 0;
+    problems.forEach(addToUI);
+}
+
+// FILTERS
 function filterProblems(event, type) {
     list.innerHTML = "";
-
-    document.querySelectorAll(".filters button").forEach(btn => {
-        btn.classList.remove("active");
-    });
-
-    event.target.classList.add("active");
-
     total = easy = medium = hard = 0;
 
     problems.forEach(p => {
@@ -196,16 +193,8 @@ function filterProblems(event, type) {
     });
 }
 
-// FILTER STATUS
 function filterStatus(event, type) {
     list.innerHTML = "";
-
-    document.querySelectorAll(".filters button").forEach(btn => {
-        btn.classList.remove("active");
-    });
-
-    event.target.classList.add("active");
-
     total = easy = medium = hard = 0;
 
     problems.forEach(p => {
@@ -219,16 +208,8 @@ function filterStatus(event, type) {
     });
 }
 
-// FILTER TOPIC
 function filterTopic(event, type) {
     list.innerHTML = "";
-
-    document.querySelectorAll(".filters button").forEach(btn => {
-        btn.classList.remove("active");
-    });
-
-    event.target.classList.add("active");
-
     total = easy = medium = hard = 0;
 
     problems.forEach(p => {
@@ -246,14 +227,11 @@ function toggleDarkMode() {
 // LOAD
 function loadData() {
     const data = localStorage.getItem("problems");
-
     if (data) {
         problems = JSON.parse(data);
         problems.forEach(addToUI);
     }
-
     updateEmptyState();
 }
 
-// START
 loadData();

@@ -251,3 +251,6 @@ body, .container, li, input, button {
 .edit-btn:hover {
     background: #e0a800;
 }
+button:active {
+    transform: scale(0.97);
+}
