@@ -96,6 +96,7 @@ button:active {
     display: flex;
     gap: 5px;
     margin-top: 10px;
+    margin-bottom:10px;
 }
 
 .filters button {
@@ -241,4 +242,12 @@ li:hover {
 /* SMOOTH TRANSITION */
 body, .container, li, input, button {
     transition: all 0.3s ease;
+}
+.edit-btn {
+    background: #ffc107;
+    color: black;
+}
+
+.edit-btn:hover {
+    background: #e0a800;
 }

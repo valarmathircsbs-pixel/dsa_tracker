@@ -24,8 +24,15 @@
         <option value="Medium">Medium</option>
         <option value="Hard">Hard</option>
     </select>
+    <select id="topicSelect">
+        <option value="Arrays">Arrays</option>
+        <option value="Strings">Strings</option>
+        <option value="Trees">Trees</option>
+        <option value="Graphs">Graphs</option>
+    </select>
 
     <button id="addBtn">Add</button>
+    <input type="text" id="searchInput" placeholder="Search problems...">
 
     <!-- Filters -->
     <div class="filters">
@@ -35,6 +42,18 @@
         <button onclick="filterProblems(event,'Hard')">Hard</button>
     </div>
 
+    <div class="filters">
+        <button onclick="filterStatus(event,'All')">All</button>
+        <button onclick="filterStatus(event,'Solved')">Solved</button>
+        <button onclick="filterStatus(event,'Unsolved')">Unsolved</button>
+    </div>
+    <div class="filters">
+        <button onclick="filterTopic(event,'All')">All Topics</button>
+        <button onclick="filterTopic(event,'Arrays')">Arrays</button>
+        <button onclick="filterTopic(event,'Strings')">Strings</button>
+        <button onclick="filterTopic(event,'Trees')">Trees</button>
+        <button onclick="filterTopic(event,'Graphs')">Graphs</button>
+    </div>
     <h2>Problems</h2>
 
     <p id="emptyMsg">No problems added yet 🚀</p>
